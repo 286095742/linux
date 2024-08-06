@@ -47,34 +47,103 @@
 / {
 	model = "FunBoy 40A HandSet A33";
 	compatible = "allwinner,funboy-a33", "allwinner,sun8i-a33";
-
-	panel {
-		compatible = "edt,et070080dh6";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		port@0 {
-			reg = <0>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			panel_input: endpoint@0 {
-				reg = <0>;
-				remote-endpoint = <&tcon0_out_panel>;
+	aliases {
+		serial0 = &uart0;
+	};
+        st7701s {
+	        compatible = "spi_st7701s";
+        	cs-gpios = <&pio 6 10 GPIO_ACTIVE_HIGH>; //PG 10
+	        clk-gpios = <&pio 6 7 GPIO_ACTIVE_HIGH>;  //PG7
+        	data-gpios = <&pio 6 6 GPIO_ACTIVE_HIGH>;  //PG6
+	        reset-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+        	status = "okay";
+        };
+	
+	bat: battery {
+		compatible = "simple-battery";
+		constant_charge_current_max_microamp = <400000>;
+	};
+	soc@01c00000 {
+		/delete-node/ gpu@1c40000;
+	};
+	thermal-zones {
+		cpu_thermal {
+			cooling-maps {
+				/delete-node/ map2;
+				/delete-node/ map3;
 			};
 		};
 	};
 };
 
-&tcon0 {
+&backlight{
+//	enable-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 A0 B1 C2 D3 E4 F5 G6 H7*/
+	/delete-property/ enable-gpios;
+};
+
+&i2c0 {
+	/delete-node/ touchscreen@0;
+};
+
+&uart0 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&lcd_rgb666_pins>;
+	pinctrl-0 = <&uart0_pins_b>;
 	status = "okay";
 };
 
-&tcon0_out {
-	tcon0_out_panel: endpoint@0 {
-		reg = <0>;
-		remote-endpoint = <&panel_input>;
-	};
+&simplefb_lcd{
+       status = "okay";
+       vcc-lcd-supply = <&reg_vcc5v0>;
+};
+
+&r_uart {
+	status = "disabled";
+};
+
+&codec {
+	allwinner,audio-routing =
+		"Headphone", "HP",
+		"Headphone", "HPCOM",
+		"MIC1", "Mic",
+		"Mic",  "HBIAS";
+	status = "okay";
+};
+
+&codec_analog {
+	status = "okay";
+};
+&mmc0 {
+	/delete-property/ cd-gpios;
+	/delete-property/ cd-inverted;
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc0_pins_a>;
+	vmmc-supply = <&reg_vcc3v3>;
+	vqmmc-supply = <&reg_vcc3v3>;
+	broken-cd;
+};
+
+&ac_power_supply{
+	status="okay";
+};
+
+&battery_power_supply{
+	status="okay";
+};
+&usb_power_supply{
+	status="okay";
+};
+
+&reg_vcc3v0 {
+	regulator-always-on;
+	status = "okay";
+};
+
+&reg_vcc3v3 {
+	regulator-always-on;
+	status = "okay";
+};
+
+&reg_vcc5v0 {
+	regulator-always-on;
+	status = "okay";
 };
