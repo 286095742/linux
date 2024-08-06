@@ -75,6 +75,9 @@
 		};
 	};
 };
+&usb_otg{
+	status = "disabled";
+};
 
 &backlight{
 //	enable-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 A0 B1 C2 D3 E4 F5 G6 H7*/
