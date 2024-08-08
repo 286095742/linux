@@ -1,0 +1,287 @@
+/*
+ * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+ *
+ * This file is dual-licensed: you can use it either under the terms
+ * of the GPL or the X11 license, at your option. Note that this dual
+ * licensing only applies to this file, and not this project as a
+ * whole.
+ *
+ *  a) This file is free software; you can redistribute it and/or
+ *     modify it under the terms of the GNU General Public License as
+ *     published by the Free Software Foundation; either version 2 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This file is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ * Or, alternatively,
+ *
+ *  b) Permission is hereby granted, free of charge, to any person
+ *     obtaining a copy of this software and associated documentation
+ *     files (the "Software"), to deal in the Software without
+ *     restriction, including without limitation the rights to use,
+ *     copy, modify, merge, publish, distribute, sublicense, and/or
+ *     sell copies of the Software, and to permit persons to whom the
+ *     Software is furnished to do so, subject to the following
+ *     conditions:
+ *
+ *     The above copyright notice and this permission notice shall be
+ *     included in all copies or substantial portions of the Software.
+ *
+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ *     OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/dts-v1/;
+#include "sun8i-a33.dtsi"
+#include "sun8i-q8-common.dtsi"
+
+/ {
+	model = "FunBoy 40A HandSet A33";
+	compatible = "allwinner,funboy-a33", "allwinner,sun8i-a33";
+	aliases {
+		serial0 = &uart0;
+	};
+        st7701s {
+	        compatible = "spi_st7701s";
+        	cs-gpios = <&pio 6 10 GPIO_ACTIVE_HIGH>; //PG 10
+	        clk-gpios = <&pio 6 7 GPIO_ACTIVE_HIGH>;  //PG7
+        	data-gpios = <&pio 6 6 GPIO_ACTIVE_HIGH>;  //PG6
+	        reset-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+        	status = "okay";
+        };
+	
+	bat: battery {
+		compatible = "simple-battery";
+		constant_charge_current_max_microamp = <400000>;
+	};
+	soc@01c00000 {
+		/delete-node/ gpu@1c40000;
+	};
+	thermal-zones {
+		cpu_thermal {
+			cooling-maps {
+				/delete-node/ map2;
+				/delete-node/ map3;
+			};
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys-polled";
+		input-name = "gpio-keys";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio_keys>;
+
+		volume-down {
+			label = "volume_down";
+			gpios = <&pio 11 6 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_VOLUMEDOWN>;
+		};
+
+		volume-up {
+			label = "volume_up";
+			gpios = <&pio 11 7 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_VOLUMEUP>;
+		};
+
+		key-up {
+			label = "key_up";
+			gpios = <&pio 4 3 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <117>;
+		};
+		key-down {
+			label = "key_down";
+			gpios = <&pio 4 2 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <100>;
+		};
+		key-left {
+			label = "key_left";
+			gpios = <&pio 4 0 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <108>;
+		};
+		key-right {
+			label = "key_right";
+			gpios = <&pio 4 5 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <114>;
+		};
+
+		key-a {
+			label = "key_a";
+			gpios = <&pio 4 9 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <97>;
+		};
+		key-b {
+			label = "key_b";
+			gpios = <&pio 4 7 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <98>;
+		};
+		key-x {
+			label = "key_x";
+			gpios = <&pio 4 10 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <120>;//??109
+		};
+		key-y {
+			label = "key_y";
+			gpios = <&pio 4 8 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <121>;//? 110
+		};
+		key-ll {
+			label = "key_ll";
+			gpios = <&pio 4 16 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <109>;
+		};
+
+		key-rr {
+			label = "key_rr";
+			gpios = <&pio 4 11 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <110>;
+		};
+
+		key-sel {
+			label = "key_sel";
+			gpios = <&pio 4 1 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <107>;
+		};
+		key-start {
+			label = "key_start";
+			gpios = <&pio 4 12 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <115>;
+		};
+		key-home {
+			label = "key_home";
+			gpios = <&pio 4 4 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <102>;//home
+		};
+		key-menu {
+			label = "key_menu";
+			gpios = <&pio 4 6 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <139>; //menu
+		};
+	};
+
+};
+&r_pio {
+	/*
+	上 PE3  下 PE2   左 PE0  右 PE5
+	A PE9   B PE7   X PE10   Y PE8
+	Sel PE1  Start PE12  home PE4  ... PE6
+	LL PE16   RR PE11
+
+	A0 B1 C2 D3 E4 F5 G6 H7 I8 J9 K10 L11
+	*/
+	gpio_keys: gpio-keys {
+		pins = "PE0", "PE1", "PE2","PE3", "PE4", "PE5","PE6", "PE7", "PE8","PE9", "PE10", "PE11","PE12", "PE16","PL6", "PL7";
+		function = "gpio_in";
+		bias-pull-up;
+	};
+};
+
+&usb_otg {
+        dr_mode = "peripheral";
+        status = "okay";
+};
+
+&usbphy {
+	/delete-property/ pinctrl-names;
+	/delete-property/ pinctrl-0;
+	/delete-property/ usb0_id_det-gpio;
+	status = "okay";
+};
+
+&backlight{
+//	enable-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 A0 B1 C2 D3 E4 F5 G6 H7*/
+	/delete-property/ enable-gpios;
+};
+
+&i2c0 {
+	/delete-node/ touchscreen@0;
+};
+
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins_b>;
+	status = "okay";
+};
+
+&simplefb_lcd{
+       status = "okay";
+       vcc-lcd-supply = <&reg_vcc5v0>;
+};
+
+&r_uart {
+	status = "disabled";
+};
+
+&codec {
+	allwinner,audio-routing =
+		"Headphone", "HP",
+		"Headphone", "HPCOM",
+		"MIC1", "Mic",
+		"Mic",  "HBIAS";
+	status = "okay";
+};
+
+&codec_analog {
+	status = "okay";
+};
+&mmc0 {
+	/delete-property/ cd-gpios;
+	/delete-property/ cd-inverted;
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc0_pins_a>;
+	vmmc-supply = <&reg_vcc3v3>;
+	vqmmc-supply = <&reg_vcc3v3>;
+	broken-cd;
+};
+
+&ac_power_supply{
+	status="okay";
+};
+
+&battery_power_supply{
+	status="okay";
+};
+&usb_power_supply{
+	status="okay";
+};
+
+&reg_vcc3v0 {
+	regulator-always-on;
+	status = "okay";
+};
+
+&reg_vcc3v3 {
+	regulator-always-on;
+	status = "okay";
+};
+
+&reg_vcc5v0 {
+	regulator-always-on;
+	status = "okay";
+};
