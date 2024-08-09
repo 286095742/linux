@@ -46,7 +46,7 @@
 	gpio-keys {
 		compatible = "gpio-keys-polled";
 		input-name = "gpio-keys";
-
+		poll-interval = <100>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&gpio_keys
 					&gpio_key_l>;
@@ -55,102 +55,134 @@
 			label = "volume_down";
 			gpios = <&r_pio 0 6 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
+			linux,input-value = <1>;
 			linux,code = <KEY_VOLUMEDOWN>;
+			debounce-interval=<20>;
 		};
 
 		volume-up {
 			label = "volume_up";
 			gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
+			linux,input-value = <1>;
 			linux,code = <KEY_VOLUMEUP>;
+			debounce-interval=<20>;
 		};
 
 		key-up {
 			label = "key_up";
 			gpios = <&pio 4 3 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <117>;
+			linux,input-value = <1>;
+			linux,code = <103>;
+			debounce-interval=<20>;
 		};
 		key-down {
 			label = "key_down";
 			gpios = <&pio 4 2 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <100>;
+			linux,input-value = <1>;
+			linux,code = <108>;
+			debounce-interval=<20>;
 		};
 		key-left {
 			label = "key_left";
 			gpios = <&pio 4 0 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <108>;
+			linux,input-value = <1>;
+			linux,code = <105>;
+			debounce-interval=<20>;
 		};
 		key-right {
 			label = "key_right";
 			gpios = <&pio 4 5 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <114>;
+			linux,input-value = <1>;
+			linux,code = <106>;
+			debounce-interval=<20>;
 		};
 
 		key-a {
 			label = "key_a";
 			gpios = <&pio 4 9 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <97>;
+			linux,input-value = <1>;
+			linux,code = <30>;
+			debounce-interval=<20>;
 		};
 		key-b {
 			label = "key_b";
 			gpios = <&pio 4 7 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <98>;
+			linux,input-value = <1>;
+			linux,code = <48>;
+			debounce-interval=<20>;
 		};
 		key-x {
 			label = "key_x";
 			gpios = <&pio 4 10 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <120>;//??109
+			linux,input-value = <1>;
+			linux,code = <120>;
+			debounce-interval=<20>;
 		};
 		key-y {
 			label = "key_y";
 			gpios = <&pio 4 8 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
+			linux,input-value = <1>;
 			linux,code = <121>;//? 110
+			debounce-interval=<20>;
 		};
 		key-ll {
 			label = "key_ll";
 			gpios = <&pio 4 16 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <109>;
+			linux,input-value = <1>;
+			linux,code = <104>;
+			debounce-interval=<20>;
 		};
 
 		key-rr {
 			label = "key_rr";
 			gpios = <&pio 4 11 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <110>;
+			linux,input-value = <1>;
+			linux,code = <109>;
+			debounce-interval=<20>;
 		};
 
 		key-sel {
 			label = "key_sel";
 			gpios = <&pio 4 1 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
+			linux,input-value = <1>;
 			linux,code = <107>;
+			debounce-interval=<20>;
 		};
 		key-start {
 			label = "key_start";
 			gpios = <&pio 4 12 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
+			linux,input-value = <1>;
 			linux,code = <115>;
+			debounce-interval=<20>;
 		};
 		key-home {
 			label = "key_home";
 			gpios = <&pio 4 4 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
+			linux,input-value = <1>;
 			linux,code = <102>;//home
+			debounce-interval=<20>;
 		};
 		key-menu {
 			label = "key_menu";
 			gpios = <&pio 4 6 GPIO_ACTIVE_LOW>;
 			linux,input-type = <1>;
-			linux,code = <139>; //menu
+			linux,input-value = <1>;
+			linux,code = <16>; //menu Q
+			debounce-interval=<20>;
 		};
 	};
 };
@@ -232,7 +264,7 @@
 	A0 B1 C2 D3 E4 F5 G6 H7 I8 J9 K10 L11
 	*/
 	gpio_keys: gpio-keys {
-		pins = "PE0", "PE1", "PE2","PE3", "PE4", "PE5","PE6", "PE7", "PE8","PE9", "PE10", "PE11","PE12", "PE16";
+		pins = "PE0", "PE1", "PE2","PE3", "PE4", "PE5","PE6", "PE7", "PE8","PE9", "PE10", "PE11","PE12", "PE16","PE14";
 		function = "gpio_in";
 		bias-pull-up;
 	};
@@ -368,6 +400,9 @@
 
 &reg_vcc5v0 {
 	regulator-always-on;
+	regulator-boot-on;
+	enable-active-high;
+	gpio = <&pio 4 14 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
 &codec {
@@ -400,5 +435,13 @@
 	status = "okay";
 };
 &codec_analog {
+	status = "okay";
+};
+
+&sound {
+	status = "okay";
+};
+
+&dai{
 	status = "okay";
 };
